@@ -5,7 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
-import { CustomLogger } from './logger/custom-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,8 +14,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.use(helmet());
-
-  app.useLogger(app.get(CustomLogger));
 
   app.setGlobalPrefix('/api');
 
@@ -33,8 +30,8 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('NestJS Starter Template')
-    .setDescription('This is a starter template where everything is set up.')
+    .setTitle('Block Service API')
+    .setDescription('This is a block service API for file sharing.')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
