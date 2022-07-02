@@ -2,8 +2,10 @@ import { Controller, Get, Param, Res, StreamableFile } from '@nestjs/common';
 import { DatabaseFilesService } from './database-files.service';
 import { Readable } from 'stream';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('database-files')
+@ApiTags('database-files')
 export class DatabaseFilesController {
   constructor(private readonly databaseFilesService: DatabaseFilesService) {}
 
