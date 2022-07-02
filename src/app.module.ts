@@ -22,7 +22,6 @@ import redisConfig from './config/redis.config';
 import { DatabaseFilesModule } from './features/database-files/database-files.module';
 import { LogsMiddleware } from './utils/logs.middleware';
 import { HealthModule } from './health/health.module';
-import { EmailModule } from './email/email.module';
 import { bullModuleOptions } from './config/bull.config';
 
 @Module({
@@ -41,7 +40,6 @@ import { bullModuleOptions } from './config/bull.config';
     UsersModule,
     DatabaseFilesModule,
     HealthModule,
-    EmailModule,
     BullModule.forRootAsync(bullModuleOptions),
   ],
   controllers: [AppController],

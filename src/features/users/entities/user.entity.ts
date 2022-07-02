@@ -1,13 +1,5 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { Address } from './address.entity';
 import { DatabaseFile } from '../../../features/database-files/entities/database-file.entity';
 
 @Entity()
@@ -18,21 +10,11 @@ export class User {
   @Column({ unique: true })
   public email: string;
 
-  @Column({ default: false })
-  public isEmailConfirmed?: boolean;
-
   @Column()
   public name: string;
 
   @Column({ nullable: true })
   public phoneNumber?: string;
-
-  @OneToOne(() => Address, {
-    eager: true,
-    cascade: true,
-  })
-  @JoinColumn()
-  public address?: Address;
 
   @Column()
   @Exclude()
