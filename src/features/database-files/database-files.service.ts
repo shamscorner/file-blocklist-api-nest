@@ -16,14 +16,14 @@ export class DatabaseFilesService {
     queryRunner: QueryRunner,
   ) {
     const newFile = await queryRunner.manager.create(DatabaseFile, {
-      filename,
+      name: filename,
       data: dataBuffer,
     });
     await queryRunner.manager.save(DatabaseFile, newFile);
     return newFile;
   }
 
-  async deleteFileWithQueryRunner(fileId: number, queryRunner: QueryRunner) {
+  async deleteFileWithQueryRunner(fileId: string, queryRunner: QueryRunner) {
     const deleteResponse = await queryRunner.manager.delete(
       DatabaseFile,
       fileId,
@@ -33,7 +33,7 @@ export class DatabaseFilesService {
     }
   }
 
-  async getFileById(fileId: number) {
+  async getFileById(fileId: string) {
     const file = await this.databaseFilesRepository.findOne({
       where: {
         id: fileId,

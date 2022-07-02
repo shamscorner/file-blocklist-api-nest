@@ -59,10 +59,6 @@ class EnvironmentVariables {
 
   @IsString()
   @IsNotEmpty()
-  EMAIL_CONFIRMATION_URL: string;
-
-  @IsString()
-  @IsNotEmpty()
   DATABASE_HOST: string;
 
   @IsNumber()
@@ -88,26 +84,6 @@ class EnvironmentVariables {
   @IsBoolean()
   @IsOptional()
   TYPEORM_LOGGING: boolean;
-
-  @IsString()
-  @IsNotEmpty()
-  EMAIL_HOST: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  EMAIL_PORT: number;
-
-  @IsBoolean()
-  @IsOptional()
-  EMAIL_IS_SECURE: boolean;
-
-  @IsString()
-  @IsNotEmpty()
-  EMAIL_USER: string;
-
-  @IsString()
-  @IsNotEmpty()
-  EMAIL_PASSWORD: string;
 }
 
 export function validate(config: Record<string, unknown>) {

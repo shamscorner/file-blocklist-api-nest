@@ -23,7 +23,6 @@ import { DatabaseFilesModule } from './features/database-files/database-files.mo
 import { LogsMiddleware } from './utils/logs.middleware';
 import { HealthModule } from './health/health.module';
 import { EmailModule } from './email/email.module';
-import { AuthorizationModule } from './authorization/authorization.module';
 import { bullModuleOptions } from './config/bull.config';
 
 @Module({
@@ -43,7 +42,6 @@ import { bullModuleOptions } from './config/bull.config';
     DatabaseFilesModule,
     HealthModule,
     EmailModule,
-    AuthorizationModule,
     BullModule.forRootAsync(bullModuleOptions),
   ],
   controllers: [AppController],

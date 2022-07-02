@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Res,
-  StreamableFile,
-} from '@nestjs/common';
+import { Controller, Get, Param, Res, StreamableFile } from '@nestjs/common';
 import { DatabaseFilesService } from './database-files.service';
 import { Readable } from 'stream';
 import { Response } from 'express';
@@ -16,7 +9,7 @@ export class DatabaseFilesController {
 
   @Get(':id')
   async getDatabaseFileById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Res({ passthrough: true }) response: Response,
   ) {
     const file = await this.databaseFilesService.getFileById(id);
@@ -24,7 +17,7 @@ export class DatabaseFilesController {
     const stream = Readable.from(file.data);
 
     response.set({
-      'Content-Disposition': `inline; filename="${file.filename}"`,
+      'Content-Disposition': `inline; filename="${file.name}"`,
       'Content-Type': 'image',
     });
 
