@@ -35,47 +35,29 @@ export class RequestsService {
     user: User,
   ): Promise<Request> {
     const file = await this.databaseFilesService.getFileById(fileId);
+
     if (!file) {
       throw new NotFoundException();
     }
 
-    const existingRequest = await this.requestsRepository.findOneBy({
-      file: {
-        id: fileId,
+    const result = await this.requestsRepository.upsert(
+      {
+        ...createRequestDto,
+        user,
+        file,
       },
-      user: {
-        id: user.id,
+      ['user', 'file'],
+    );
+
+    const newRequest = await this.requestsRepository.findOne({
+      where: {
+        id: result.raw[0].id,
       },
-    });
-
-    if (existingRequest) {
-      await this.requestsRepository.update(
-        existingRequest.id,
-        createRequestDto,
-      );
-
-      const updatedRequest = this.requestsRepository.findOne({
-        where: {
-          id: existingRequest.id,
-        },
-        relations: {
-          user: true,
-          file: true,
-        },
-      });
-
-      return updatedRequest;
-    }
-
-    const request = await this.requestsRepository.create({
-      ...createRequestDto,
-      user,
-      file: {
-        id: fileId,
+      relations: {
+        user: true,
+        file: true,
       },
     });
-
-    const newRequest = await this.requestsRepository.save(request);
 
     return newRequest;
   }
