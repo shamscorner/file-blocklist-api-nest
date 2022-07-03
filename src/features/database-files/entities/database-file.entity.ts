@@ -28,7 +28,7 @@ export class DatabaseFile {
   public mimeType: string;
 
   @CreateDateColumn()
-  public uploadedAt: Date;
+  public downloadedAt: Date;
 
   @Transform(
     ({ value }) =>
@@ -58,4 +58,10 @@ export class DatabaseFile {
 
   @OneToMany(() => Request, (request: Request) => request.file)
   public requests?: Request[];
+
+  @Exclude()
+  @Column({
+    default: 0,
+  })
+  public downloadCount?: number;
 }

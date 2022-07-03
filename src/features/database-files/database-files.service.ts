@@ -90,7 +90,7 @@ export class DatabaseFilesService {
         skip: skippedItems,
         take: limit,
         order: {
-          uploadedAt: 'DESC',
+          downloadedAt: 'DESC',
         },
       },
     );
@@ -231,17 +231,22 @@ export class DatabaseFilesService {
       throw new NotFoundException();
     }
 
+    this.databaseFilesRepository.update(file.id, {
+      downloadCount: file.downloadCount + 1,
+      downloadedAt: new Date(),
+    });
+
     return file;
   }
 
   /**
-   * Delete all older files older less than a specified days
+   * Delete all older files who doesn't have downloads older less than a specified days
    *
    * @param numberOfDays The number of days in the past from now on
    */
   async deleteOlderFiles(numberOfDays: number) {
     await this.databaseFilesRepository.delete({
-      uploadedAt: LessThan(this.subtractDays(numberOfDays)),
+      downloadedAt: LessThan(this.subtractDays(numberOfDays)),
     });
   }
 
