@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../../utils/dto/pagination.dto';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, LessThan, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { DatabaseFile } from './entities/database-file.entity';
 import { FileMetaType } from './types/file-meta';
@@ -235,11 +235,22 @@ export class DatabaseFilesService {
   }
 
   /**
+   * Delete all older files older less than a specified days
+   *
+   * @param numberOfDays The number of days in the past from now on
+   */
+  async deleteOlderFiles(numberOfDays: number) {
+    await this.databaseFilesRepository.delete({
+      uploadedAt: LessThan(this.subtractDays(numberOfDays)),
+    });
+  }
+
+  /**
    * Dispatch an event to remove pending requests
    *
    * @param param {fileId, ownerId, requestId}
    */
-  dispatchEventToRemovePendingRequests({
+  private dispatchEventToRemovePendingRequests({
     fileId,
     ownerId,
     requestId,
@@ -262,7 +273,7 @@ export class DatabaseFilesService {
    *
    * @returns A generated random text
    */
-  generateRandomText(): string {
+  private generateRandomText(): string {
     let text = '';
     const possible =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -272,5 +283,13 @@ export class DatabaseFilesService {
     }
 
     return text;
+  }
+
+  private subtractDays(numOfDays: number, date = new Date()) {
+    const dateCopy = new Date(date.getTime());
+
+    dateCopy.setDate(dateCopy.getDate() - numOfDays);
+
+    return dateCopy;
   }
 }
