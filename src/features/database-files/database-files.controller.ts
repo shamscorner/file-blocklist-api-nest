@@ -1,7 +1,11 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -25,13 +29,14 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { DatabaseFile } from './entities/database-file.entity';
-import { FileUploadDto } from './dto/file-upload.dto';
+import { UploadFileDto } from './dto/upload-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RequestWithUser } from '../../authentication/request-with-user.interface';
 import { PaginatedResultDto } from '../../utils/dto/paginated-result.dto';
 import { DatabaseFilesService } from './database-files.service';
 import { JwtAuthenticationGuard } from 'src/authentication/jwt-authentication.guard';
 import { GetFileDto } from './dto/get-file.dto';
+import { UpdateFileDto } from './dto/update-file.dto';
 
 @Controller('database-files')
 @ApiTags('database-files')
@@ -43,7 +48,7 @@ export class DatabaseFilesController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Upload a new file',
-    type: FileUploadDto,
+    type: UploadFileDto,
   })
   @ApiCreatedResponse({
     description: 'A file of the user has been uploaded successfully!',
@@ -84,25 +89,90 @@ export class DatabaseFilesController {
     type: String,
   })
   @ApiOkResponse({
-    description: 'A file with the id has been fetched successfully!',
+    description: 'A file record with the id has been fetched successfully!',
     type: DatabaseFile,
   })
   @ApiNotFoundResponse({
     description: 'A file with given id does not exist.',
   })
-  async getFileById(
-    @Param('id') id: string,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    const file = await this.databaseFilesService.getFileById(id);
-
-    const stream = Readable.from(file.data);
-
-    response.set({
-      'Content-Disposition': `inline; filename="${file.name}"`,
-      'Content-Type': 'image',
-    });
-
-    return new StreamableFile(stream);
+  async getFileById(@Param('id') id: string) {
+    return await this.databaseFilesService.getFileById(id);
   }
+
+  @Patch(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'Should be a valid id for the file to update',
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'A file with the id has been updated successfully!',
+    type: DatabaseFile,
+  })
+  @ApiNotFoundResponse({
+    description: 'A file with given id does not exist.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
+  @UseGuards(JwtAuthenticationGuard)
+  update(
+    @Param('id') id: string,
+    @Body() updateFileDto: UpdateFileDto,
+    @Req() request: RequestWithUser,
+  ) {
+    const user = request.user;
+    return this.databaseFilesService.updateFile(id, updateFileDto, user.id);
+  }
+
+  @Delete(':id')
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'Should be a valid id for the file to delete',
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'A file with the id has been deleted successfully!',
+    type: DatabaseFile,
+  })
+  @ApiNotFoundResponse({
+    description: 'A file with given id does not exist.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
+  @UseGuards(JwtAuthenticationGuard)
+  @HttpCode(204)
+  remove(@Param('id') id: string, @Req() request: RequestWithUser) {
+    const user = request.user;
+    return this.databaseFilesService.deleteFile(id, user.id);
+  }
+
+  // @Get(':id')
+  // @ApiParam({
+  //   name: 'id',
+  //   required: true,
+  //   description: 'Should be a valid id for the file to fetch',
+  //   type: String,
+  // })
+  // @ApiOkResponse({
+  //   description: 'A file with the id has been fetched successfully!',
+  //   type: DatabaseFile,
+  // })
+  // @ApiNotFoundResponse({
+  //   description: 'A file with given id does not exist.',
+  // })
+  // async getFileById(
+  //   @Param('id') id: string,
+  //   @Res({ passthrough: true }) response: Response,
+  // ) {
+  //   const file = await this.databaseFilesService.getFileById(id);
+
+  //   const stream = Readable.from(file.data);
+
+  //   response.set({
+  //     'Content-Disposition': `inline; filename="${file.name}"`,
+  //     'Content-Type': 'image',
+  //   });
+
+  //   return new StreamableFile(stream);
+  // }
 }

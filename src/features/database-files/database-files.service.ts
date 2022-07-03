@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../../utils/dto/pagination.dto';
 import { FindManyOptions, Repository } from 'typeorm';
@@ -7,6 +11,7 @@ import { DatabaseFile } from './entities/database-file.entity';
 import { FileMetaType } from './types/file-meta';
 import { PaginatedResultDto } from '../../utils/dto/paginated-result.dto';
 import { getPaginationProps } from '../../utils/get-pagination-props';
+import { UpdateFileDto } from './dto/update-file.dto';
 
 @Injectable()
 export class DatabaseFilesService {
@@ -104,15 +109,84 @@ export class DatabaseFilesService {
   }
 
   /**
+   *  Update a file's record on the database
+   *
+   * @param fileId A valid id of the file to update
+   * @param fileDto The body of the request
+   * @param ownerId A valid user id who own the file that will be updated
+   * @returns The record of the updated file
+   */
+  async updateFile(
+    fileId: string,
+    fileDto: UpdateFileDto,
+    ownerId: number,
+  ): Promise<DatabaseFile> {
+    const oldFile = await this.databaseFilesRepository.findOne({
+      where: {
+        id: fileId,
+      },
+      relations: {
+        owner: true,
+      },
+    });
+
+    if (!oldFile) {
+      throw new NotFoundException();
+    }
+
+    if (oldFile.owner && oldFile.owner.id === ownerId) {
+      await this.databaseFilesRepository.update(fileId, fileDto);
+
+      const updatedFile = await this.databaseFilesRepository.findOne({
+        where: {
+          id: fileId,
+        },
+        relations: {
+          owner: true,
+        },
+      });
+
+      if (!updatedFile) {
+        throw new NotFoundException();
+      }
+
+      return updatedFile;
+    }
+
+    throw new UnauthorizedException();
+  }
+
+  /**
    * Delete a file from the database
    *
    * @param fileId A valid id of the file to delete
+   * @param ownerId A valid user id who own the file that will be deleted
    */
-  async deleteFile(fileId: string): Promise<void> {
-    const deleteResponse = await this.databaseFilesRepository.delete(fileId);
-    if (!deleteResponse.affected) {
+  async deleteFile(fileId: string, ownerId: number): Promise<void> {
+    const oldFile = await this.databaseFilesRepository.findOne({
+      where: {
+        id: fileId,
+      },
+      relations: {
+        owner: true,
+      },
+    });
+
+    if (!oldFile) {
       throw new NotFoundException();
     }
+
+    if (oldFile.owner && oldFile.owner.id === ownerId) {
+      const deleteResponse = await this.databaseFilesRepository.delete(fileId);
+
+      if (!deleteResponse.affected) {
+        throw new NotFoundException();
+      }
+
+      return;
+    }
+
+    throw new UnauthorizedException();
   }
 
   /**
