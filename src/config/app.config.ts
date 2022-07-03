@@ -1,16 +1,7 @@
 import { ConfigModule, ConfigService, registerAs } from '@nestjs/config';
 import { ThrottlerAsyncOptions } from '@nestjs/throttler';
 
-export const throttleModuleAsyncOptions: ThrottlerAsyncOptions = {
-  imports: [ConfigModule],
-  inject: [ConfigService],
-  useFactory: (configService: ConfigService) => ({
-    ttl: configService.get('app.throttle.ttl'),
-    limit: configService.get('app.throttle.limit'),
-  }),
-};
-
-export default registerAs('app', () => ({
+export const getAppConfigOptions = () => ({
   // API PORT
   port: parseInt(process.env.PORT, 10) || 3000,
 
@@ -41,4 +32,15 @@ export default registerAs('app', () => ({
 
   // sites that are CORS enabled
   frontendURL: process.env.FRONTEND_URL || 'localhost',
-}));
+});
+
+export const throttleModuleAsyncOptions: ThrottlerAsyncOptions = {
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (configService: ConfigService) => ({
+    ttl: configService.get('app.throttle.ttl'),
+    limit: configService.get('app.throttle.limit'),
+  }),
+};
+
+export default registerAs('app', getAppConfigOptions);

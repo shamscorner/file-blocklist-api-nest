@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   Res,
   StreamableFile,
@@ -30,6 +31,7 @@ import { RequestWithUser } from '../../authentication/request-with-user.interfac
 import { PaginatedResultDto } from '../../utils/dto/paginated-result.dto';
 import { DatabaseFilesService } from './database-files.service';
 import { JwtAuthenticationGuard } from 'src/authentication/jwt-authentication.guard';
+import { GetFileDto } from './dto/get-file.dto';
 
 @Controller('database-files')
 @ApiTags('database-files')
@@ -63,6 +65,15 @@ export class DatabaseFilesController {
       },
       request.user,
     );
+  }
+
+  @Get()
+  @ApiOkResponse({
+    description: 'All the files have been fetched successfully!',
+    type: [DatabaseFile],
+  })
+  findAll(@Query() { ownerId, page = 1, limit = 30 }: GetFileDto) {
+    return this.databaseFilesService.getAllFiles(ownerId, { page, limit });
   }
 
   @Get(':id')

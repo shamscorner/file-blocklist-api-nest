@@ -6,9 +6,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 import { User } from '../../../features/users/entities/user.entity';
 import { Request } from '../../../features/requests/entities/request.entity';
+import { getAppConfigOptions } from 'src/config/app.config';
 
 @Entity()
 export class DatabaseFile {
@@ -27,6 +28,7 @@ export class DatabaseFile {
   @CreateDateColumn()
   public uploadedAt: Date;
 
+  @Transform(({ value }) => `${getAppConfigOptions().url}/api/v1/${value}`)
   @Column()
   public downloadUrl: string;
 
