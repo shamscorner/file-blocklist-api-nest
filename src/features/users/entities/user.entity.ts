@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { DatabaseFile } from '../../../features/database-files/entities/database-file.entity';
+import { Request } from '../../../features/requests/entities/request.entity';
 
 @Entity()
 export class User {
@@ -26,6 +27,9 @@ export class User {
 
   @OneToMany(() => DatabaseFile, (file: DatabaseFile) => file.owner)
   public files?: DatabaseFile[];
+
+  @OneToMany(() => Request, (request: Request) => request.user)
+  public requests?: Request[];
 
   @Column({ nullable: true })
   @Exclude()

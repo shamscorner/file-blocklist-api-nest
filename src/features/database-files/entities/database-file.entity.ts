@@ -1,11 +1,13 @@
-import { User } from '../../../features/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from '../../../features/users/entities/user.entity';
+import { Request } from '../../../features/requests/entities/request.entity';
 
 @Entity()
 export class DatabaseFile {
@@ -37,4 +39,7 @@ export class DatabaseFile {
 
   @ManyToOne(() => User, (owner: User) => owner.files)
   public owner: User;
+
+  @OneToMany(() => Request, (request: Request) => request.file)
+  public requests?: Request[];
 }

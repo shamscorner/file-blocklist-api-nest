@@ -23,6 +23,7 @@ import { DatabaseFilesModule } from './features/database-files/database-files.mo
 import { LogsMiddleware } from './utils/logs.middleware';
 import { HealthModule } from './health/health.module';
 import { bullModuleOptions } from './config/bull.config';
+import { RequestsModule } from './features/requests/requests.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { bullModuleOptions } from './config/bull.config';
     DatabaseFilesModule,
     HealthModule,
     BullModule.forRootAsync(bullModuleOptions),
+    RequestsModule,
   ],
   controllers: [AppController],
   providers: [
