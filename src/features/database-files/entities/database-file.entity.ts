@@ -10,6 +10,7 @@ import { Exclude, Transform } from 'class-transformer';
 import { User } from '../../../features/users/entities/user.entity';
 import { Request } from '../../../features/requests/entities/request.entity';
 import { getAppConfigOptions } from 'src/config/app.config';
+import { FileStatusEnum } from '../enums/file-status.enum';
 
 @Entity()
 export class DatabaseFile {
@@ -32,8 +33,12 @@ export class DatabaseFile {
   @Column()
   public downloadUrl: string;
 
-  @Column({ default: false })
-  public isBlocked: boolean;
+  @Column({
+    type: 'enum',
+    enum: FileStatusEnum,
+    default: FileStatusEnum.OPEN,
+  })
+  public status: FileStatusEnum;
 
   @Exclude()
   @Column({
