@@ -146,33 +146,33 @@ export class DatabaseFilesController {
     return this.databaseFilesService.deleteFile(id, user.id);
   }
 
-  // @Get(':id')
-  // @ApiParam({
-  //   name: 'id',
-  //   required: true,
-  //   description: 'Should be a valid id for the file to fetch',
-  //   type: String,
-  // })
-  // @ApiOkResponse({
-  //   description: 'A file with the id has been fetched successfully!',
-  //   type: DatabaseFile,
-  // })
-  // @ApiNotFoundResponse({
-  //   description: 'A file with given id does not exist.',
-  // })
-  // async getFileById(
-  //   @Param('id') id: string,
-  //   @Res({ passthrough: true }) response: Response,
-  // ) {
-  //   const file = await this.databaseFilesService.getFileById(id);
+  @Get('/download/:token')
+  @ApiParam({
+    name: 'token',
+    required: true,
+    description: 'Should be a valid url-token for the file to download',
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'A file with the url-token has been fetched successfully!',
+    type: DatabaseFile,
+  })
+  @ApiNotFoundResponse({
+    description: 'A file with given url-token does not exist.',
+  })
+  async downloadFileByToken(
+    @Param('token') token: string,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const file = await this.databaseFilesService.getFileByDownloadToken(token);
 
-  //   const stream = Readable.from(file.data);
+    const stream = Readable.from(file.data);
 
-  //   response.set({
-  //     'Content-Disposition': `inline; filename="${file.name}"`,
-  //     'Content-Type': 'image',
-  //   });
+    response.set({
+      'Content-Disposition': `inline; filename="${file.name}"`,
+      'Content-Type': file.mimeType,
+    });
 
-  //   return new StreamableFile(stream);
-  // }
+    return new StreamableFile(stream);
+  }
 }

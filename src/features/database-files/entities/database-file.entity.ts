@@ -29,7 +29,12 @@ export class DatabaseFile {
   @CreateDateColumn()
   public uploadedAt: Date;
 
-  @Transform(({ value }) => `${getAppConfigOptions().url}/api/v1/${value}`)
+  @Transform(
+    ({ value }) =>
+      `${getAppConfigOptions().url}:${
+        getAppConfigOptions().port
+      }/api/v1/database-files/download/${value}`,
+  )
   @Column()
   public downloadUrl: string;
 

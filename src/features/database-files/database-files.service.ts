@@ -76,6 +76,9 @@ export class DatabaseFilesService {
         where,
         skip: skippedItems,
         take: limit,
+        order: {
+          uploadedAt: 'DESC',
+        },
       },
     );
 
@@ -187,6 +190,26 @@ export class DatabaseFilesService {
     }
 
     throw new UnauthorizedException();
+  }
+
+  /**
+   * Get a file by the download token
+   *
+   * @param token A valid token to download a file
+   * @returns An entire streamable file data
+   */
+  async getFileByDownloadToken(token: string) {
+    const file = await this.databaseFilesRepository.findOne({
+      where: {
+        downloadUrl: token,
+      },
+    });
+
+    if (!file) {
+      throw new NotFoundException();
+    }
+
+    return file;
   }
 
   /**
