@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -35,6 +36,7 @@ export class DatabaseFile {
         getAppConfigOptions().port
       }/api/v1/database-files/download/${value}`,
   )
+  @Index({ unique: true })
   @Column()
   public downloadUrl: string;
 

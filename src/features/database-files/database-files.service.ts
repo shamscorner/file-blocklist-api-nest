@@ -35,7 +35,17 @@ export class DatabaseFilesService {
     { size, mimeType }: FileMetaType,
     owner: User,
   ): Promise<DatabaseFile> {
-    const downloadUrl = this.generateRandomText();
+    let downloadUrl = this.generateRandomText();
+    let existingFile = await this.databaseFilesRepository.findOneBy({
+      downloadUrl,
+    });
+
+    while (existingFile) {
+      downloadUrl = this.generateRandomText();
+      existingFile = await this.databaseFilesRepository.findOneBy({
+        downloadUrl,
+      });
+    }
 
     const newFile = await this.databaseFilesRepository.create({
       name,
