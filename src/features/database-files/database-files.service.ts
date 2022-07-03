@@ -110,7 +110,7 @@ export class DatabaseFilesService {
    * @param fileId A valid id of the file to get
    * @returns The record of the file
    */
-  async getFileById(fileId: string): Promise<DatabaseFile> {
+  async getFileById(fileId: number): Promise<DatabaseFile> {
     const file = await this.databaseFilesRepository.findOne({
       where: {
         id: fileId,
@@ -134,7 +134,7 @@ export class DatabaseFilesService {
    * @returns The record of the updated file
    */
   async updateFile(
-    fileId: string,
+    fileId: number,
     fileDto: UpdateFileDto,
     ownerId: number,
     requestId = 0,
@@ -188,7 +188,7 @@ export class DatabaseFilesService {
    * @param fileId A valid id of the file to delete
    * @param ownerId A valid user id who own the file that will be deleted
    */
-  async deleteFile(fileId: string, ownerId: number): Promise<void> {
+  async deleteFile(fileId: number, ownerId: number): Promise<void> {
     const oldFile = await this.databaseFilesRepository.findOne({
       where: {
         id: fileId,
@@ -261,7 +261,7 @@ export class DatabaseFilesService {
     ownerId,
     requestId,
   }: {
-    fileId: string;
+    fileId: number;
     ownerId: number;
     requestId: number;
   }) {

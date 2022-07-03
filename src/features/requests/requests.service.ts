@@ -28,7 +28,7 @@ export class RequestsService {
    * @returns The newly created file-request
    */
   async create(
-    fileId: string,
+    fileId: number,
     createRequestDto: CreateRequestDto,
     user: User,
   ): Promise<Request> {

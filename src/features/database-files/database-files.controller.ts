@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -96,7 +97,7 @@ export class DatabaseFilesController {
   @ApiNotFoundResponse({
     description: 'A file with given id does not exist.',
   })
-  async getFileById(@Param('id') id: string) {
+  async getFileById(@Param('id', ParseIntPipe) id: number) {
     return await this.databaseFilesService.getFileById(id);
   }
 
@@ -117,7 +118,7 @@ export class DatabaseFilesController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   @UseGuards(JwtAuthenticationGuard)
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateFileDto: UpdateFileDto,
     @Query() { requestId }: UpdateFileRequest,
     @Req() request: RequestWithUser,
@@ -148,7 +149,10 @@ export class DatabaseFilesController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   @UseGuards(JwtAuthenticationGuard)
   @HttpCode(204)
-  remove(@Param('id') id: string, @Req() request: RequestWithUser) {
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() request: RequestWithUser,
+  ) {
     const user = request.user;
     return this.databaseFilesService.deleteFile(id, user.id);
   }

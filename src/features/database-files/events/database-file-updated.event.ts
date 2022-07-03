@@ -1,5 +1,5 @@
 export class DatabaseFileUpdatedEvent {
-  fileId: string;
+  fileId: number;
   requestId: number;
   ownerId: number;
 }

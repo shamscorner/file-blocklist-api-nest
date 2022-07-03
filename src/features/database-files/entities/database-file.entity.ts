@@ -15,8 +15,8 @@ import { FileStatusEnum } from '../enums/file-status.enum';
 
 @Entity()
 export class DatabaseFile {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   public name: string;

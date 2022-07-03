@@ -87,7 +87,7 @@ export class RequestsController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   @UseGuards(JwtAuthenticationGuard)
   createRequest(
-    @Param('id') fileId: string,
+    @Param('id', ParseIntPipe) fileId: number,
     @Body() createRequestDto: CreateRequestDto,
     @Req() request: RequestWithUser,
   ) {
