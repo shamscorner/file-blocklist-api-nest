@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -10,6 +11,7 @@ import { User } from '../../../features/users/entities/user.entity';
 import { DatabaseFile } from '../../../features/database-files/entities/database-file.entity';
 import { ActionType } from '../enums/action-type.enum';
 
+@Index(['user', 'file'], { unique: true })
 @Entity()
 export class Request {
   @PrimaryGeneratedColumn()
