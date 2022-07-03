@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../../utils/dto/pagination.dto';
 import { FindManyOptions, Repository } from 'typeorm';
@@ -12,6 +8,8 @@ import { Request } from './entities/request.entity';
 import { PaginatedResultDto } from '../../utils/dto/paginated-result.dto';
 import { getPaginationProps } from '../../utils/get-pagination-props';
 import { DatabaseFilesService } from '../database-files/database-files.service';
+import { DatabaseFileNotFoundException } from '../database-files/exceptions/database-file-not-found.exception';
+import { RequestNotFoundException } from './exceptions/request-not-found.exception';
 
 @Injectable()
 export class RequestsService {
@@ -37,7 +35,7 @@ export class RequestsService {
     const file = await this.databaseFilesService.getFileById(fileId);
 
     if (!file) {
-      throw new NotFoundException();
+      throw new DatabaseFileNotFoundException(fileId);
     }
 
     const result = await this.requestsRepository.upsert(
@@ -124,7 +122,7 @@ export class RequestsService {
     });
 
     if (!oldRequest) {
-      throw new NotFoundException();
+      throw new RequestNotFoundException(requestId);
     }
 
     const { owner } = oldRequest.file;
@@ -133,7 +131,7 @@ export class RequestsService {
       const deleteResponse = await this.requestsRepository.delete(requestId);
 
       if (!deleteResponse.affected) {
-        throw new NotFoundException();
+        throw new RequestNotFoundException(requestId);
       }
 
       return;

@@ -14,6 +14,7 @@ import { getPaginationProps } from '../../utils/get-pagination-props';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DatabaseFileUpdatedEvent } from './events/database-file-updated.event';
+import { DatabaseFileNotFoundException } from './exceptions/database-file-not-found.exception';
 
 @Injectable()
 export class DatabaseFilesService {
@@ -119,7 +120,7 @@ export class DatabaseFilesService {
       },
     });
     if (!file) {
-      throw new NotFoundException();
+      throw new DatabaseFileNotFoundException(fileId);
     }
     return file;
   }
@@ -148,7 +149,7 @@ export class DatabaseFilesService {
     });
 
     if (!oldFile) {
-      throw new NotFoundException();
+      throw new DatabaseFileNotFoundException(fileId);
     }
 
     if (oldFile.owner && oldFile.owner.id === ownerId) {
@@ -164,7 +165,7 @@ export class DatabaseFilesService {
       });
 
       if (!updatedFile) {
-        throw new NotFoundException();
+        throw new DatabaseFileNotFoundException(fileId);
       }
 
       if (requestId) {
@@ -198,14 +199,14 @@ export class DatabaseFilesService {
     });
 
     if (!oldFile) {
-      throw new NotFoundException();
+      throw new DatabaseFileNotFoundException(fileId);
     }
 
     if (oldFile.owner && oldFile.owner.id === ownerId) {
       const deleteResponse = await this.databaseFilesRepository.delete(fileId);
 
       if (!deleteResponse.affected) {
-        throw new NotFoundException();
+        throw new DatabaseFileNotFoundException(fileId);
       }
 
       return;
@@ -228,7 +229,7 @@ export class DatabaseFilesService {
     });
 
     if (!file) {
-      throw new NotFoundException();
+      throw new NotFoundException('File with the download url is not found');
     }
 
     this.databaseFilesRepository.update(file.id, {
