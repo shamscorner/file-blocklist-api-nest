@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "documentation:serve": "npx @compodoc/compodoc -p tsconfig.json --serve"
+    "documentation:serve": "npx @compodoc/compodoc -p tsconfig.json --serve --port 5003"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^8.2.1",
