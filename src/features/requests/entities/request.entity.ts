@@ -31,9 +31,13 @@ export class Request {
   @UpdateDateColumn()
   public updatedAt: Date;
 
-  @ManyToOne(() => User, (user: User) => user.requests)
+  @ManyToOne(() => User, (user: User) => user.requests, {
+    cascade: null,
+  })
   public user: User;
 
-  @ManyToOne(() => DatabaseFile, (file: DatabaseFile) => file.requests)
+  @ManyToOne(() => DatabaseFile, (file: DatabaseFile) => file.requests, {
+    cascade: true,
+  })
   public file: DatabaseFile;
 }

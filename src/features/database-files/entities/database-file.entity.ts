@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { User } from '../../../features/users/entities/user.entity';
 import { Request } from '../../../features/requests/entities/request.entity';
 
@@ -21,17 +22,18 @@ export class DatabaseFile {
   public size: number;
 
   @Column()
-  public extension: string;
+  public mimeType: string;
 
   @CreateDateColumn()
   public uploadedAt: Date;
 
   @Column()
-  public downloadLink: string;
+  public downloadUrl: string;
 
   @Column({ default: false })
   public isBlocked: boolean;
 
+  @Exclude()
   @Column({
     type: 'bytea',
   })
