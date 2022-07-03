@@ -22,6 +22,7 @@ import redisConfig from './config/redis.config';
 import { DatabaseFilesModule } from './features/database-files/database-files.module';
 import { LogsMiddleware } from './utils/logs.middleware';
 import { HealthModule } from './health/health.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { bullModuleOptions } from './config/bull.config';
 import { RequestsModule } from './features/requests/requests.module';
 
@@ -38,10 +39,11 @@ import { RequestsModule } from './features/requests/requests.module';
     ScheduleModule.forRoot(),
     DatabaseModule,
     AuthenticationModule,
-    UsersModule,
-    DatabaseFilesModule,
     HealthModule,
     BullModule.forRootAsync(bullModuleOptions),
+    EventEmitterModule.forRoot(),
+    UsersModule,
+    DatabaseFilesModule,
     RequestsModule,
   ],
   controllers: [AppController],

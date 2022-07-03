@@ -37,6 +37,7 @@ import { DatabaseFilesService } from './database-files.service';
 import { JwtAuthenticationGuard } from 'src/authentication/jwt-authentication.guard';
 import { GetFileDto } from './dto/get-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { UpdateFileRequest } from './dto/update-file-request.dto';
 
 @Controller('database-files')
 @ApiTags('database-files')
@@ -118,10 +119,16 @@ export class DatabaseFilesController {
   update(
     @Param('id') id: string,
     @Body() updateFileDto: UpdateFileDto,
+    @Query() { requestId }: UpdateFileRequest,
     @Req() request: RequestWithUser,
   ) {
     const user = request.user;
-    return this.databaseFilesService.updateFile(id, updateFileDto, user.id);
+    return this.databaseFilesService.updateFile(
+      id,
+      updateFileDto,
+      user.id,
+      requestId,
+    );
   }
 
   @Delete(':id')

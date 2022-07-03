@@ -10,6 +10,7 @@ specifiers:
   '@nestjs/core': ^8.4.4
   '@nestjs/cqrs': ^8.0.4
   '@nestjs/elasticsearch': ^8.1.0
+  '@nestjs/event-emitter': ^1.1.1
   '@nestjs/jwt': ^8.0.0
   '@nestjs/mapped-types': ^1.0.1
   '@nestjs/passport': ^8.2.1
@@ -83,6 +84,7 @@ dependencies:
   '@nestjs/core': 8.4.6_suave6mfkne66p6dqupcjv2744
   '@nestjs/cqrs': 8.0.4_ylfx5swiot7inr3kdyigrsa54e
   '@nestjs/elasticsearch': 8.1.0_nxu36c4ybiapjeu2nuo6ee74ie
+  '@nestjs/event-emitter': 1.1.1_ppbi2tyth2jyod2vg4y74lzsra
   '@nestjs/jwt': 8.0.1_@nestjs+common@8.4.6
   '@nestjs/mapped-types': 1.0.1_2v2uegmigrjmkn34lwfzpe6n3u
   '@nestjs/passport': 8.2.1_goeifnko2ksklhhajumjzug7ey
@@ -2133,6 +2135,19 @@ packages:
       '@elastic/elasticsearch': 8.2.1
       '@nestjs/common': 8.4.6_37tgzg5iwyrf23cqcmjxlmljgu
       rxjs: 7.5.5
+    dev: false
+
+  /@nestjs/event-emitter/1.1.1_ppbi2tyth2jyod2vg4y74lzsra:
+    resolution: {integrity: sha512-fOcV1sjOSeLA6hj7c++Ga3pZG62BcmSKn5sAE/M0fYwuKn3T3Bx9BQm9siLTRLwSY/kJjwHbhTgfnL1bfEqY3w==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0
+      '@nestjs/core': ^7.0.0 || ^8.0.0
+      reflect-metadata: ^0.1.12
+    dependencies:
+      '@nestjs/common': 8.4.6_37tgzg5iwyrf23cqcmjxlmljgu
+      '@nestjs/core': 8.4.6_suave6mfkne66p6dqupcjv2744
+      eventemitter2: 6.4.5
+      reflect-metadata: 0.1.13
     dev: false
 
   /@nestjs/jwt/8.0.1_@nestjs+common@8.4.6:
@@ -4588,6 +4603,10 @@ packages:
   /event-target-shim/5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
+    dev: false
+
+  /eventemitter2/6.4.5:
+    resolution: {integrity: sha512-bXE7Dyc1i6oQElDG0jMRZJrRAn9QR2xyyFGmBdZleNmyQX0FqGYmhZIrIrpPfm/w//LTo4tVQGOGQcGCb5q9uw==}
     dev: false
 
   /events/1.1.1:
@@ -7614,7 +7633,7 @@ packages:
     dev: true
 
   /source-map/0.1.43:
-    resolution: {integrity: sha1-wkvBRspRfBRx9drL4lcbK3+eM0Y=}
+    resolution: {integrity: sha512-VtCvB9SIQhk3aF6h+N85EaqIaBFIAfZ9Cu+NJHHVvc8BbEcnvDcFw6sqQ2dQrT6SlOrZq3tIvyD9+EGq/lJryQ==}
     engines: {node: '>=0.8.0'}
     requiresBuild: true
     dependencies:
@@ -7693,7 +7712,7 @@ packages:
     dev: true
 
   /statuses/1.5.0:
-    resolution: {integrity: sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=}
+    resolution: {integrity: sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==}
     engines: {node: '>= 0.6'}
     dev: true
 

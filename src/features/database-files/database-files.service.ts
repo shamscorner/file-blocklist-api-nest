@@ -12,12 +12,15 @@ import { FileMetaType } from './types/file-meta';
 import { PaginatedResultDto } from '../../utils/dto/paginated-result.dto';
 import { getPaginationProps } from '../../utils/get-pagination-props';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { DatabaseFileUpdatedEvent } from './events/database-file-updated.event';
 
 @Injectable()
 export class DatabaseFilesService {
   constructor(
     @InjectRepository(DatabaseFile)
     private databaseFilesRepository: Repository<DatabaseFile>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -133,6 +136,7 @@ export class DatabaseFilesService {
     fileId: string,
     fileDto: UpdateFileDto,
     ownerId: number,
+    requestId = 0,
   ): Promise<DatabaseFile> {
     const oldFile = await this.databaseFilesRepository.findOne({
       where: {
@@ -161,6 +165,14 @@ export class DatabaseFilesService {
 
       if (!updatedFile) {
         throw new NotFoundException();
+      }
+
+      if (requestId) {
+        this.dispatchEventToRemovePendingRequests({
+          fileId,
+          ownerId,
+          requestId,
+        });
       }
 
       return updatedFile;
@@ -220,6 +232,29 @@ export class DatabaseFilesService {
     }
 
     return file;
+  }
+
+  /**
+   * Dispatch an event to remove pending requests
+   *
+   * @param param {fileId, ownerId, requestId}
+   */
+  dispatchEventToRemovePendingRequests({
+    fileId,
+    ownerId,
+    requestId,
+  }: {
+    fileId: string;
+    ownerId: number;
+    requestId: number;
+  }) {
+    const databaseFileUpdatedEvent = new DatabaseFileUpdatedEvent();
+
+    databaseFileUpdatedEvent.fileId = fileId;
+    databaseFileUpdatedEvent.ownerId = ownerId;
+    databaseFileUpdatedEvent.requestId = requestId;
+
+    this.eventEmitter.emit('database-file.updated', databaseFileUpdatedEvent);
   }
 
   /**
