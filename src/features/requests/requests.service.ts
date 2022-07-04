@@ -75,7 +75,7 @@ export class RequestsService {
 
     const where: FindManyOptions<Request>['where'] = {};
 
-    if (ownerId) {
+    if (+ownerId) {
       where.user = {
         id: ownerId,
       };
