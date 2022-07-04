@@ -93,6 +93,9 @@ export class DatabaseFilesService {
         order: {
           downloadedAt: 'DESC',
         },
+        relations: {
+          owner: !ownerId,
+        },
       },
     );
 
