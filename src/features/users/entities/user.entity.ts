@@ -12,7 +12,12 @@ export class User {
   public email: string;
 
   @Column()
-  public name: string;
+  public firstName: string;
+
+  @Column({
+    nullable: true,
+  })
+  public lastName?: string;
 
   @Column({ nullable: true })
   public phoneNumber?: string;
