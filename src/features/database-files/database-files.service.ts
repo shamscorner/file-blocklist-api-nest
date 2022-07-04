@@ -79,7 +79,7 @@ export class DatabaseFilesService {
 
     const where: FindManyOptions<DatabaseFile>['where'] = {};
 
-    if (ownerId) {
+    if (+ownerId) {
       where.owner = {
         id: ownerId,
       };
@@ -94,7 +94,7 @@ export class DatabaseFilesService {
           downloadedAt: 'DESC',
         },
         relations: {
-          owner: !ownerId,
+          owner: ownerId !== 0,
         },
       },
     );
@@ -171,7 +171,7 @@ export class DatabaseFilesService {
         throw new DatabaseFileNotFoundException(fileId);
       }
 
-      if (requestId) {
+      if (+requestId) {
         this.dispatchEventToRemovePendingRequests({
           fileId,
           ownerId,

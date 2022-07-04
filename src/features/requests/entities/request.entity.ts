@@ -39,7 +39,7 @@ export class Request {
   public user: User;
 
   @ManyToOne(() => DatabaseFile, (file: DatabaseFile) => file.requests, {
-    cascade: true,
+    onDelete: 'CASCADE',
   })
   public file: DatabaseFile;
 }

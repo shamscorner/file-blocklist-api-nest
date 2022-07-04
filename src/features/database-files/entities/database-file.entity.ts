@@ -56,7 +56,9 @@ export class DatabaseFile {
   @ManyToOne(() => User, (owner: User) => owner.files)
   public owner: User;
 
-  @OneToMany(() => Request, (request: Request) => request.file)
+  @OneToMany(() => Request, (request: Request) => request.file, {
+    cascade: true,
+  })
   public requests?: Request[];
 
   @Exclude()
