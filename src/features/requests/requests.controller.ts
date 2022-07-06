@@ -40,7 +40,7 @@ export class RequestsController {
     description: 'All the file-requests have been fetched successfully!',
     type: [Request],
   })
-  findAll(@Query() { ownerId, page = 1, limit = 30 }: GetRequestDto) {
+  findAll(@Query() { ownerId, page = 1, limit = 100 }: GetRequestDto) {
     return this.requestsService.getAll(ownerId, { page, limit });
   }
 

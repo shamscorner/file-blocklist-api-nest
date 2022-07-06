@@ -79,7 +79,7 @@ export class DatabaseFilesController {
     description: 'All the files have been fetched successfully!',
     type: [DatabaseFile],
   })
-  findAll(@Query() { ownerId, page = 1, limit = 30 }: GetFileDto) {
+  findAll(@Query() { ownerId, page = 1, limit = 100 }: GetFileDto) {
     return this.databaseFilesService.getAllFiles(ownerId, { page, limit });
   }
 
